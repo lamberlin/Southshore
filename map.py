@@ -82,9 +82,7 @@ m.get_root().html.add_child(legend)
 st.title("Student Houses Internet Status in Kampala")
 st.subheader("Based on Wi-Fi and Optical Fiber Connectivity")
 st.subheader("created by Martin,Ole, Lambert")
-col1, col2 = st.columns(2)
-
-# Display the map in the first column
+col1, col2 = st.columns([5, 1])
 with col1:
     folium_static(m)
 
