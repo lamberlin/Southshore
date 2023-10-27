@@ -3,7 +3,7 @@ import folium
 from streamlit_folium import folium_static
 import pandas as pd
 
-background_image = "https://drive.google.com/drive/u/0/folders/1SaLay6zgxuHtKaXq1TrYBS1qcGzoVTGj"
+background_image = "https://raw.githubusercontent.com/lamberlin/Southshore/main/pic.jpg"
 
 st.markdown(
     f"""
