@@ -53,6 +53,7 @@ for _, row in house_data.iterrows():
     Address: {row['PHYSICAL LOCATION']}<br>
     Wi-Fi: {row['HAS WIFI INTERNET']}<br>
     Fiber: {row['CONNECTED TO OPTICAL FIBRE(YES/NO)']}<br>
+    Service provider: {row['SERVICE PROVIDER']}<br>
     <a href="{row['URL GOOGLE MAPS']}" target="_blank">View on Google Maps</a>
     """
 
