@@ -2,8 +2,10 @@ import streamlit as st
 import folium
 from streamlit_folium import folium_static
 import pandas as pd
+import geopandas as gpd
 
-background_image = "https://raw.githubusercontent.com/lamberlin/Southshore/main/pic.jpg"
+# Setup
+background_image = "https://drive.google.com/uc?export=view&id=1_Uz0hyhWFMyiaurp8kZ856E5Ygn3bZK6"
 
 st.markdown(
     f"""
@@ -26,66 +28,63 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+# Load data
 house_data = pd.read_csv("./data.csv")
-house_data['X'] = house_data['X'].astype(float)
-house_data['Y'] = house_data['Y'].astype(float)
-house_data.dropna(subset=['X', 'Y'], inplace=True)
 
-# Initialize the map
-m = folium.Map(location=[house_data['X'].mean(), house_data['Y'].mean()], zoom_start=10)
+# Load the saved boundary
+kampala_gdf = gpd.read_file("kampala_boundary.geojson")
 
-# Display the legend directly using Streamlit outside of the map
+# Convert the boundary to coordinates
+kampala_coords = kampala_gdf.geometry[0].exterior.coords.xy
+kampala_coords = list(zip(kampala_coords[1], kampala_coords[0]))  # lat, lon format
 
-
-# Iterate through the rows to create the CircleMarkers
-for _, row in house_data.iterrows():
-    if row['HAS WIFI INTERNET'] == 'YES' and row['CONNECTED TO OPTICAL FIBRE(YES/NO)'] == 'YES':
-        color = "green"
-    elif row['HAS WIFI INTERNET'] == 'YES':
-        color = "blue"
-    elif row['CONNECTED TO OPTICAL FIBRE(YES/NO)'] == 'YES':
-        color = "yellow"
-    else:
-        color = "red"
-
-    # Generate the popup content with other variables and a link to Google Maps search
-    popup_content = f"""
-    Address: {row['PHYSICAL LOCATION']}<br>
-    Wi-Fi: {row['HAS WIFI INTERNET']}<br>
-    Fiber: {row['CONNECTED TO OPTICAL FIBRE(YES/NO)']}<br>
-    Service provider: {row['SERVICE PROVIDER']}<br>
-    <a href="{row['URL GOOGLE MAPS']}" target="_blank">View on Google Maps</a>
-    """
-
-    folium.CircleMarker(
-        location=[row['X'], row['Y']],
-        radius=5,
-        color=color,
+# Function to generate map based on selected status
+def generate_map(status):
+    m = folium.Map(location=[0.3476, 32.5825], zoom_start=11)  # Centered on Kampala
+    
+    # Highlight Kampala
+    folium.Polygon(
+        locations=kampala_coords,
         fill=True,
-        fill_color=color,
-        fill_opacity=0.6,
-        popup=folium.Popup(popup_content, max_width=300)
+        color='green',
+        fill_opacity=0.1,
+        weight=2
     ).add_to(m)
+    
+    for _, row in house_data.iterrows():
+        color = None
+        if row['HAS WIFI INTERNET'] == 'YES' and row['CONNECTED TO OPTICAL FIBRE(YES/NO)'] == 'YES':
+            color = "green"
+        elif row['HAS WIFI INTERNET'] == 'YES':
+            color = "blue"
+        elif row['CONNECTED TO OPTICAL FIBRE(YES/NO)'] == 'YES':
+            color = "yellow"
+        else:
+            color = "red"
+        
+        if status == "All" or \
+           (status == "Mobile hotspots" and color == "blue") or \
+           (status == "Optical Fiber Only" and color == "yellow") or \
+           (status == "Both" and color == "green") or \
+           (status == "no internet access" and color == "red"):
+            folium.CircleMarker(
+                location=[row['X'], row['Y']],
+                radius=5,
+                color=color,
+                fill=True,
+                fill_color=color,
+                fill_opacity=0.6,
+            ).add_to(m)
+    return m
 
-legend_html = """
-<div style="position: fixed; bottom: 10px; right: 10px; z-index: 9999; background-color: rgba(255, 255, 255, 0.8); padding: 10px; border-radius: 5px;">
-<p><span style="color:red; font-size:25px; margin-right:10px;">●</span>None</p>
-<p><span style="color:blue; font-size:25px; margin-right:10px;">●</span>Wi-Fi Only</p>
-<p><span style="color:yellow; font-size:25px; margin-right:10px;">●</span>Fiber Only</p>
-<p><span style="color:green; font-size:25px; margin-right:10px;">●</span>Wi-Fi + Fiber</p>
-</div>
-"""
-
-# Attach the legend to the map
-legend = folium.Element(legend_html)
-m.get_root().html.add_child(legend)
-st.title("Student Houses Internet Status in Kampala")
+# User interface
+st.title("Student Houses Internet Status in Uganda")
 st.subheader("Based on Wi-Fi and Optical Fiber Connectivity")
-st.subheader("created by Martin,Ole, Lambert")
-col1, col2 = st.columns([5, 1])
-with col1:
-    folium_static(m)
 
-# Display the legend in the second column
-with col2:
-    st.markdown(legend_html, unsafe_allow_html=True)
+selected_status = st.selectbox(
+    "Select Internet Status",
+    ["All", "Wi-Fi Only", "Optical Fiber Only", "Both Wi-Fi and Optical Fiber", "Neither"]
+)
+
+m = generate_map(selected_status)
+folium_static(m)
