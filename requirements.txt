@@ -6,3 +6,4 @@ pydeck==0.8.0
 folium==0.14.0
 branca==0.6.0
 streamlit-folium==0.15.0
+geopandas
