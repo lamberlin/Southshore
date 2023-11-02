@@ -83,7 +83,7 @@ st.subheader("Based on Wi-Fi and Optical Fiber Connectivity")
 
 selected_status = st.selectbox(
     "Select Internet Status",
-    ["All", "Wi-Fi Only", "Optical Fiber Only", "Both Wi-Fi and Optical Fiber", "Neither"]
+    ["All", "Mobile hotspots", "Optical Fiber Only", "Both", "no internet access"]
 )
 
 m = generate_map(selected_status)
