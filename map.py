@@ -78,7 +78,7 @@ def generate_map(status):
     return m
 
 # User interface
-st.title("Student Houses Internet Status in Uganda")
+st.title("Student Houses Internet Status in Kampala")
 st.subheader("Based on Wi-Fi and Optical Fiber Connectivity")
 
 selected_status = st.selectbox(
