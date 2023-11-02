@@ -6,7 +6,7 @@ import geopandas as gpd
 
 
 # Setup
-background_image = "https://drive.google.com/file/d/1ULOlggWoTgSd6EQfhAMoK1m9NdrD6PLJ/view?usp=sharing"
+background_image = "https://drive.google.com/uc?export=view&id=1ULOlggWoTgSd6EQfhAMoK1m9NdrD6PLJ"
 
 st.markdown(
     f"""
