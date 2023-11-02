@@ -7,6 +7,7 @@ import geopandas as gpd
 
 # Setup
 background_image = "https://drive.google.com/file/d/1ULOlggWoTgSd6EQfhAMoK1m9NdrD6PLJ/view?usp=sharing"
+
 st.markdown(
     f"""
     <style>
@@ -87,4 +88,4 @@ selected_status = st.selectbox(
 )
 
 m = generate_map(selected_status)
-folium_static(m)
+folium_static(m)  
