@@ -63,7 +63,7 @@ def generate_map(status):
             color = "red"
         
         if status == "All" or \
-           (status == "HAS WIFI INTERNET'" and color == "blue") or \
+           (status == "Mobile hotspots" and color == "blue") or \
            (status == "Optical Fiber Only" and color == "yellow") or \
            (status == "Both" and color == "green") or \
            (status == "no internet access" and color == "red"):
