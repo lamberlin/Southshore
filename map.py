@@ -63,10 +63,10 @@ def generate_map(status):
             color = "red"
         
         if status == "All" or \
-           (status == "Wi-Fi Only" and color == "blue") or \
+           (status == "HAS WIFI INTERNET'" and color == "blue") or \
            (status == "Optical Fiber Only" and color == "yellow") or \
-           (status == "Both Wi-Fi and Optical Fiber" and color == "green") or \
-           (status == "Neither" and color == "red"):
+           (status == "Both" and color == "green") or \
+           (status == "no internet access" and color == "red"):
             folium.CircleMarker(
                 location=[row['X'], row['Y']],
                 radius=5,
