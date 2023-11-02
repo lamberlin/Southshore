@@ -4,7 +4,6 @@ from streamlit_folium import folium_static
 import pandas as pd
 import geopandas as gpd
 
-
 # Setup
 background_image = "https://drive.google.com/uc?export=view&id=1ULOlggWoTgSd6EQfhAMoK1m9NdrD6PLJ"
 
@@ -64,10 +63,10 @@ def generate_map(status):
             color = "red"
         
         if status == "All" or \
-           (status == "Mobile hotspots" and color == "blue") or \
+           (status == "Wi-Fi Only" and color == "blue") or \
            (status == "Optical Fiber Only" and color == "yellow") or \
-           (status == "Both" and color == "green") or \
-           (status == "no internet access" and color == "red"):
+           (status == "Both Wi-Fi and Optical Fiber" and color == "green") or \
+           (status == "Neither" and color == "red"):
             folium.CircleMarker(
                 location=[row['X'], row['Y']],
                 radius=5,
@@ -88,4 +87,4 @@ selected_status = st.selectbox(
 )
 
 m = generate_map(selected_status)
-folium_static(m)  
+folium_static(m)
